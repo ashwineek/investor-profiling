@@ -559,7 +559,18 @@ function goBack(){if(current>0){current--;renderQuestion();window.scrollTo(0,0);
 function retake(){current=0;answers={};personalInfo={};showScreen('screen-intro');}
 
 function submitToGoogleForm(score, profileName) {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAI5XD-Y6IbsL6ifptTZvrTEahRZSxLf5rWp1hjHKPJti-DtVPatxYWBYsRxnwkQK-/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVWyZF6NLgJvTY_uMnYC0hovhEHSRKCwuDHgIwRvGm1Me31Da0ONKbOEzO7bmn2sqg/exec';
+  // Build answer map: question id -> selected answer label
+  const answerLabels = {};
+  questions.forEach(q => {
+    const selectedScore = answers[q.id];
+    if (selectedScore) {
+      const opt = q.opts.find(o => o.s === selectedScore);
+      answerLabels['q' + q.id] = opt ? opt.l : '';
+    } else {
+      answerLabels['q' + q.id] = '';
+    }
+  });
   const params = new URLSearchParams({
     name:        personalInfo.name,
     age:         personalInfo.age,
@@ -573,7 +584,8 @@ function submitToGoogleForm(score, profileName) {
     invGoal:     personalInfo.invGoal,
     invLoss:     personalInfo.invLoss,
     score:       score,
-    profile:     profileName
+    profile:     profileName,
+    ...answerLabels
   });
   // Use GET with URL params to avoid CORS issues
   fetch(SCRIPT_URL + '?' + params.toString(), {
