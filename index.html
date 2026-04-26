@@ -1,459 +1,334 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0F172A">
-<meta property="og:title" content="Know Your Investor Risk Profile">
-<meta property="og:description" content="Answer 8 quick questions and get a personalised investment strategy — free & instant.">
+<meta name="theme-color" content="#0F1923">
+<meta property="og:title" content="Investor Risk Profile Assessment">
+<meta property="og:description" content="Discover your investor personality in 5 minutes. Get a personalised investment strategy.">
 <title>Investor Risk Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #F7F5F0;
-    --card: #FFFFFF;
-    --ink: #0F172A;
-    --muted: #64748B;
-    --border: #E2E8F0;
-    --accent: #0F172A;
-    --radius: 18px;
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --ink: #0F1923; --bg: #F4F1EC; --card: #FFFFFF; --muted: #6B7280;
+  --border: #E5E1DA; --gold: #C9A84C; --gold-light: #FDF6E3;
+  --error: #DC2626; --radius: 20px;
+}
+body { font-family:'Outfit',sans-serif; background:var(--bg); min-height:100vh; padding:20px 16px 50px; display:flex; justify-content:center; align-items:flex-start; }
+.wrapper { width:100%; max-width:500px; }
+.screen { display:none; }
+.screen.active { display:block; animation:fadeUp 0.4s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.card { background:var(--card); border-radius:var(--radius); box-shadow:0 4px 40px rgba(0,0,0,0.08); border:1px solid var(--border); overflow:hidden; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* HERO */
+.hero { background:var(--ink); padding:38px 26px 30px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle,rgba(201,168,76,0.15),transparent 70%); top:-80px; right:-80px; }
+.hero::after { content:''; position:absolute; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle,rgba(201,168,76,0.08),transparent 70%); bottom:-50px; left:-30px; }
+.hero-tag { display:inline-flex; align-items:center; gap:6px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:var(--gold); font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:6px 14px; border-radius:99px; margin-bottom:20px; position:relative; z-index:1; }
+.hero-title { font-family:'Cormorant Garamond',serif; color:#fff; font-size:30px; line-height:1.25; margin-bottom:12px; position:relative; z-index:1; }
+.hero-title span { color:var(--gold); }
+.hero-sub { color:rgba(255,255,255,0.6); font-size:14px; line-height:1.7; position:relative; z-index:1; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 20px 16px 40px;
-  }
+/* STATS */
+.stats-strip { display:flex; border-bottom:1px solid var(--border); }
+.stat { flex:1; text-align:center; padding:14px 8px; border-right:1px solid var(--border); }
+.stat:last-child { border-right:none; }
+.stat-icon { font-size:18px; display:block; margin-bottom:3px; }
+.stat-label { font-size:11px; color:var(--muted); font-weight:500; }
 
-  .screen { display: none; width: 100%; max-width: 480px; }
-  .screen.active { display: block; }
+/* FORM */
+.form-body { padding:24px 22px 20px; }
+.section-divider { display:flex; align-items:center; gap:10px; margin:24px 0 18px; }
+.sdl { flex:1; height:1px; background:var(--border); }
+.sdlabel { font-size:11px; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:1.2px; background:var(--gold-light); border:1px solid rgba(201,168,76,0.25); padding:4px 12px; border-radius:99px; white-space:nowrap; }
 
-  /* ── CARD ── */
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: 0 2px 30px rgba(0,0,0,0.09);
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
+.field-group { margin-bottom:16px; }
+.field-label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+.req { color:var(--error); margin-left:2px; }
+.opt-tag { font-size:10px; color:#9CA3AF; font-weight:400; text-transform:none; letter-spacing:0; margin-left:4px; }
+.field-input, .field-select { width:100%; padding:13px 15px; border:2px solid var(--border); border-radius:12px; font-size:14px; font-family:'Outfit',sans-serif; color:var(--ink); background:#FAFAF8; outline:none; transition:border-color 0.2s; appearance:none; -webkit-appearance:none; }
+.field-input:focus, .field-select:focus { border-color:var(--ink); }
+.field-input.error, .field-select.error { border-color:var(--error); }
+.sel-wrap { position:relative; }
+.sel-wrap::after { content:'▾'; position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; font-size:14px; }
+.err-msg { font-size:11px; color:var(--error); margin-top:5px; display:none; }
+.err-msg.show { display:block; }
 
-  .card-body { padding: 28px 24px; }
+/* CHECKBOX */
+.cb-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cb-item { display:flex; align-items:center; gap:8px; padding:10px 12px; border:2px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.15s; background:#FAFAF8; }
+.cb-item.checked { border-color:var(--ink); background:var(--ink); color:#fff; }
+.cb-item input[type="checkbox"] { display:none; }
+.cb-box { width:17px; height:17px; border-radius:4px; border:2px solid #D1D5DB; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:11px; color:transparent; transition:all 0.15s; }
+.cb-item.checked .cb-box { border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.15); color:#fff; }
+.cb-label { font-size:13px; font-weight:500; }
 
-  /* ── INTRO ── */
-  .intro-banner {
-    background: var(--ink);
-    padding: 36px 24px 28px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .intro-banner::before {
-    content: '';
-    position: absolute;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    top: -60px; right: -60px;
-  }
-  .intro-banner::after {
-    content: '';
-    position: absolute;
-    width: 150px; height: 150px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
-    bottom: -40px; left: -30px;
-  }
-  .brand-tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.7);
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 5px 14px;
-    border-radius: 99px;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  .intro-title {
-    font-family: 'Playfair Display', serif;
-    color: #fff;
-    font-size: 28px;
-    line-height: 1.25;
-    margin-bottom: 12px;
-    position: relative;
-    z-index: 1;
-  }
-  .intro-sub {
-    color: rgba(255,255,255,0.65);
-    font-size: 14px;
-    line-height: 1.65;
-    position: relative;
-    z-index: 1;
-  }
+/* SLIDER */
+.slider-wrap { padding:4px 0; }
+.range-slider { width:100%; -webkit-appearance:none; appearance:none; height:5px; border-radius:99px; background:linear-gradient(90deg,var(--gold) 0%,var(--border) 0%); outline:none; margin-bottom:10px; }
+.range-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--ink); cursor:pointer; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+.slider-val { text-align:center; font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+.slider-labs { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
 
-  .stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 14px 8px;
-    border-right: 1px solid var(--border);
-  }
-  .stat-item:last-child { border-right: none; }
-  .stat-icon { font-size: 18px; display: block; margin-bottom: 3px; }
-  .stat-label { font-size: 11px; color: var(--muted); font-weight: 500; }
+/* BUTTONS */
+.btn-primary { width:100%; padding:15px; background:var(--ink); color:#fff; border:none; border-radius:13px; font-size:15px; font-family:'Outfit',sans-serif; font-weight:700; cursor:pointer; transition:opacity 0.15s,transform 0.1s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-primary:active { opacity:0.85; transform:scale(0.98); }
+.btn-primary:disabled { background:#CBD5E1; cursor:default; transform:none; }
+.btn-ghost { padding:13px 18px; background:transparent; color:var(--muted); border:2px solid var(--border); border-radius:13px; font-size:14px; font-family:'Outfit',sans-serif; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+.btn-ghost:active { background:var(--border); }
+.disclaimer { text-align:center; font-size:11px; color:#9CA3AF; line-height:1.6; padding:12px 20px 18px; }
 
-  .name-section { padding: 22px 24px 0; }
-  .field-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 8px;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink);
-    background: #FAFAF8;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  input[type="text"]:focus { border-color: var(--ink); }
+/* QUIZ */
+.quiz-top { padding:18px 22px 0; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.cat-pill { font-size:11px; font-weight:700; color:var(--gold); background:var(--gold-light); border:1px solid rgba(201,168,76,0.25); padding:5px 13px; border-radius:99px; text-transform:uppercase; letter-spacing:0.8px; }
+.q-counter { font-size:13px; color:var(--muted); font-weight:600; }
+.progress-wrap { padding:0 22px; margin-bottom:20px; }
+.progress-track { background:#EEE9E0; border-radius:99px; height:5px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),#E8B84B); border-radius:99px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.quiz-body { padding:0 22px 22px; }
+.q-icon { font-size:34px; margin-bottom:12px; display:block; }
+.q-text { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--ink); line-height:1.45; margin-bottom:20px; font-weight:600; }
+.options { display:flex; flex-direction:column; gap:9px; margin-bottom:20px; }
+.opt-btn { width:100%; padding:13px 15px; border:2px solid var(--border); border-radius:13px; background:#FAFAF8; text-align:left; font-size:13.5px; font-family:'Outfit',sans-serif; color:#374151; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:11px; line-height:1.45; }
+.opt-btn.selected { border-color:var(--ink); background:var(--ink); color:#fff; }
+.opt-btn:active { transform:scale(0.98); }
+.radio-ring { width:20px; height:20px; border-radius:50%; border:2px solid #D1D5DB; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; }
+.opt-btn.selected .radio-ring { border-color:rgba(255,255,255,0.5); }
+.radio-core { width:9px; height:9px; border-radius:50%; background:#fff; display:none; }
+.opt-btn.selected .radio-core { display:block; }
+.nav-row { display:flex; gap:10px; align-items:stretch; }
 
-  /* ── BUTTONS ── */
-  .btn-primary {
-    width: 100%;
-    padding: 15px;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: 13px;
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.2px;
-    transition: opacity 0.15s, transform 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-primary:active { opacity: 0.85; transform: scale(0.98); }
-  .btn-primary:disabled { background: #CBD5E1; cursor: default; }
-
-  .btn-ghost {
-    padding: 13px 18px;
-    background: transparent;
-    color: var(--muted);
-    border: 2px solid var(--border);
-    border-radius: 13px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-ghost:active { background: var(--border); }
-
-  .disclaimer {
-    text-align: center;
-    font-size: 11px;
-    color: #94A3B8;
-    line-height: 1.6;
-    padding: 14px 24px 20px;
-  }
-
-  /* ── QUIZ ── */
-  .quiz-header {
-    padding: 20px 24px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .category-tag {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .q-counter {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 500;
-  }
-
-  .progress-wrap { padding: 0 24px; margin-bottom: 22px; }
-  .progress-track {
-    background: #EEF0F4;
-    border-radius: 99px;
-    height: 5px;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--ink);
-    border-radius: 99px;
-    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .q-icon { font-size: 36px; margin-bottom: 12px; display: block; }
-  .q-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    color: var(--ink);
-    line-height: 1.45;
-    margin-bottom: 22px;
-  }
-
-  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-  .option-btn {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: 13px;
-    background: #FAFAF8;
-    text-align: left;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    color: #334155;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    line-height: 1.4;
-  }
-  .option-btn.selected {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: #fff;
-  }
-  .option-btn:active { transform: scale(0.98); }
-
-  .radio-dot {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid #CBD5E1;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .option-btn.selected .radio-dot {
-    border-color: rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.15);
-  }
-  .radio-inner {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: #fff;
-    display: none;
-  }
-  .option-btn.selected .radio-inner { display: block; }
-
-  .nav-row { display: flex; gap: 10px; }
-
-  /* ── RESULT ── */
-  .result-banner {
-    padding: 32px 24px 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .profile-emoji { font-size: 52px; margin-bottom: 10px; display: block; }
-  .profile-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .profile-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .profile-desc {
-    font-size: 14px;
-    color: #475569;
-    line-height: 1.7;
-    max-width: 340px;
-    margin: 0 auto 16px;
-  }
-
-  .score-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 18px;
-    border-radius: 99px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .section-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 14px;
-  }
-
-  .result-block {
-    padding: 18px 20px;
-    border-radius: 14px;
-    border: 1.5px solid var(--border);
-    margin-bottom: 14px;
-  }
-
-  .alloc-bar-wrap {
-    display: flex;
-    border-radius: 8px;
-    overflow: hidden;
-    height: 12px;
-    margin-bottom: 12px;
-  }
-  .alloc-seg { transition: width 1s ease; }
-
-  .alloc-legend { display: flex; flex-direction: column; gap: 7px; }
-  .legend-row { display: flex; align-items: center; justify-content: space-between; }
-  .legend-left { display: flex; align-items: center; gap: 8px; }
-  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-  .legend-name { font-size: 13px; color: #475569; }
-  .legend-pct { font-size: 13px; font-weight: 700; color: var(--ink); }
-
-  .instruments-box {
-    background: #F8F7F3;
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
-  }
-  .instruments-text { font-size: 13.5px; color: #334155; line-height: 1.75; }
-
-  .breakdown-list { display: flex; flex-direction: column; gap: 13px; }
-  .breakdown-item {}
-  .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-  .breakdown-cat { font-size: 13px; color: #475569; }
-  .breakdown-pct { font-size: 13px; font-weight: 700; color: var(--ink); }
-  .breakdown-track {
-    background: #EEF0F4;
-    border-radius: 99px;
-    height: 7px;
-  }
-  .breakdown-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .share-bar {
-    padding: 16px 24px 10px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 10px;
-  }
-
-  .btn-whatsapp {
-    flex: 2;
-    padding: 14px;
-    background: #25D366;
-    color: #fff;
-    border: none;
-    border-radius: 13px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .screen.active { animation: fadeUp 0.35s ease; }
+/* RESULT */
+.result-hero { padding:30px 24px 22px; text-align:center; border-bottom:1px solid var(--border); }
+.res-emoji { font-size:54px; display:block; margin-bottom:10px; }
+.res-label { font-size:11px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:5px; }
+.res-name { font-family:'Cormorant Garamond',serif; font-size:30px; color:var(--ink); margin-bottom:10px; font-weight:700; }
+.res-desc { font-size:14px; color:#475569; line-height:1.75; margin-bottom:16px; }
+.score-badge { display:inline-flex; align-items:center; gap:6px; padding:7px 20px; border-radius:99px; font-size:13px; font-weight:700; }
+.result-body { padding:18px 22px 20px; }
+.sec-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.block { border:1.5px solid var(--border); border-radius:15px; padding:18px 20px; margin-bottom:14px; }
+.alloc-bar { display:flex; border-radius:8px; overflow:hidden; height:12px; margin-bottom:14px; }
+.alloc-seg { transition:width 1.2s ease; }
+.alloc-legend { display:flex; flex-direction:column; gap:8px; }
+.leg-row { display:flex; align-items:center; justify-content:space-between; }
+.leg-left { display:flex; align-items:center; gap:8px; }
+.leg-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.leg-name { font-size:13px; color:#475569; }
+.leg-pct { font-size:13px; font-weight:700; color:var(--ink); }
+.instr-box { background:var(--gold-light); border-radius:14px; padding:16px 18px; margin-bottom:14px; border:1px solid rgba(201,168,76,0.2); }
+.instr-text { font-size:13.5px; color:#374151; line-height:1.8; }
+.breakdown-list { display:flex; flex-direction:column; gap:13px; }
+.bd-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+.bd-cat { font-size:13px; color:#475569; }
+.bd-pct { font-size:13px; font-weight:700; color:var(--ink); }
+.bd-track { background:#EEE9E0; border-radius:99px; height:7px; }
+.bd-fill { height:100%; border-radius:99px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.info-summary { background:#F8F7F3; border-radius:14px; padding:4px 18px; margin-bottom:14px; }
+.info-row { display:flex; justify-content:space-between; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); gap:12px; }
+.info-row:last-child { border-bottom:none; }
+.info-key { font-size:12px; color:var(--muted); font-weight:500; flex-shrink:0; }
+.info-val { font-size:12px; color:var(--ink); font-weight:600; text-align:right; }
+.share-bar { padding:14px 22px 10px; border-top:1px solid var(--border); display:flex; gap:10px; }
+.btn-wa { flex:2; padding:14px; background:#25D366; color:#fff; border:none; border-radius:13px; font-size:14px; font-family:'Outfit',sans-serif; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; }
 </style>
 </head>
 <body>
+<div class="wrapper">
 
-<!-- ══════════════ INTRO ══════════════ -->
+<!-- INTRO -->
 <div class="screen active" id="screen-intro">
   <div class="card">
-    <div class="intro-banner">
-      <span class="brand-tag">Investor Profile Assessment</span>
-      <h1 class="intro-title">What kind of investor are you?</h1>
-      <p class="intro-sub">Answer 8 questions. Get your personalised risk profile and portfolio strategy — free & instant.</p>
+    <div class="hero">
+      <span class="hero-tag">✦ Investor Assessment</span>
+      <h1 class="hero-title">What kind of<br><span>investor are you?</span></h1>
+      <p class="hero-sub">Share your details and answer 30 questions across 6 dimensions. Get your personalised risk profile — free & instant.</p>
     </div>
-
-    <div class="stats-row">
-      <div class="stat-item">
-        <span class="stat-icon">⏱️</span>
-        <span class="stat-label">3 minutes</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-icon">❓</span>
-        <span class="stat-label">8 questions</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-icon">🔒</span>
-        <span class="stat-label">Private</span>
-      </div>
+    <div class="stats-strip">
+      <div class="stat"><span class="stat-icon">⏱️</span><span class="stat-label">~7 minutes</span></div>
+      <div class="stat"><span class="stat-icon">📋</span><span class="stat-label">30 questions</span></div>
+      <div class="stat"><span class="stat-icon">🔒</span><span class="stat-label">Private</span></div>
+      <div class="stat"><span class="stat-icon">🎯</span><span class="stat-label">6 categories</span></div>
     </div>
-
-    <div class="name-section">
-      <label class="field-label" for="user-name">Your first name (optional)</label>
-      <input type="text" id="user-name" placeholder="e.g. Priya" maxlength="30">
-    </div>
-
-    <div class="card-body" style="padding-top: 18px;">
-      <button class="btn-primary" onclick="startQuiz()">
-        Start Assessment <span>→</span>
-      </button>
+    <div class="form-body">
+      <button class="btn-primary" onclick="showScreen('screen-personal')">Begin Assessment →</button>
     </div>
     <p class="disclaimer">For educational purposes only. Not financial advice.</p>
   </div>
 </div>
 
-<!-- ══════════════ QUIZ ══════════════ -->
+<!-- PERSONAL INFO -->
+<div class="screen" id="screen-personal">
+  <div class="card">
+    <div class="hero" style="padding:28px 26px 24px">
+      <span class="hero-tag">✦ Step 1 of 2 — Your Profile</span>
+      <h1 class="hero-title" style="font-size:24px">Tell us about<br><span>yourself</span></h1>
+      <p class="hero-sub" style="font-size:13px">Fields marked * are required. Helps us personalise your risk profile.</p>
+    </div>
+    <div class="form-body">
+
+      <!-- PERSONAL DETAILS -->
+      <div class="section-divider"><div class="sdl"></div><span class="sdlabel">👤 Personal Details</span><div class="sdl"></div></div>
+
+      <div class="field-group">
+        <label class="field-label">Full Name <span class="req">*</span></label>
+        <input type="text" class="field-input" id="f-name" placeholder="e.g. Rajesh Kumar" maxlength="60">
+        <p class="err-msg" id="err-name">Please enter your full name</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Age <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-age">
+            <option value="">Select your age range</option>
+            <option>30 – 35 years</option><option>36 – 40 years</option><option>41 – 45 years</option>
+            <option>46 – 50 years</option><option>51 – 55 years</option><option>56 – 60 years</option>
+            <option>61 – 65 years</option><option>66 – 70 years</option><option>71 – 75 years</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-age">Please select your age range</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Occupation <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-occupation">
+            <option value="">Select your occupation</option>
+            <option>Salaried — Private Sector</option><option>Salaried — Government / PSU</option>
+            <option>Self-employed / Freelancer</option><option>Business Owner</option>
+            <option>Doctor / Medical Professional</option><option>Lawyer / Legal Professional</option>
+            <option>CA / Finance Professional</option><option>Engineer / IT Professional</option>
+            <option>Teacher / Academic</option><option>Retired</option><option>Other Professional</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-occupation">Please select your occupation</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Marital Status <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-marital">
+            <option value="">Select status</option>
+            <option>Married</option><option>Single</option><option>Widowed</option><option>Divorced / Separated</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-marital">Please select your marital status</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Number of Financial Dependents <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-dependents">
+            <option value="">Select number of dependents</option>
+            <option>None</option><option>1</option><option>2</option><option>3</option><option>4 or more</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-dependents">Please select number of dependents</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Mobile Number <span class="opt-tag">(optional)</span></label>
+        <input type="tel" class="field-input" id="f-mobile" placeholder="e.g. 98765 43210" maxlength="15">
+        <p class="err-msg" id="err-mobile">Please enter a valid 10-digit mobile number</p>
+      </div>
+
+      <!-- CURRENT INVESTMENTS -->
+      <div class="section-divider"><div class="sdl"></div><span class="sdlabel">💼 Current Investments</span><div class="sdl"></div></div>
+
+      <!-- Where is money invested -->
+      <div class="field-group">
+        <label class="field-label">Where is your money currently invested? <span class="req">*</span>
+          <span style="font-size:10px;color:#9CA3AF;font-weight:400;text-transform:none;letter-spacing:0;margin-left:2px">(select all)</span>
+        </label>
+        <div class="cb-grid" id="inv-grid">
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="FD / RD"><span class="cb-box">✓</span><span class="cb-label">FD / RD</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Real Estate"><span class="cb-box">✓</span><span class="cb-label">Real Estate</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Gold / Jewellery"><span class="cb-box">✓</span><span class="cb-label">Gold / Jewellery</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Mutual Funds"><span class="cb-box">✓</span><span class="cb-label">Mutual Funds</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Stocks / Equity"><span class="cb-box">✓</span><span class="cb-label">Stocks / Equity</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="PPF / EPF"><span class="cb-box">✓</span><span class="cb-label">PPF / EPF</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Insurance / LIC"><span class="cb-box">✓</span><span class="cb-label">Insurance / LIC</span></label>
+          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="None yet"><span class="cb-box">✓</span><span class="cb-label">None yet</span></label>
+        </div>
+        <p class="err-msg" id="err-inv-grid">Please select at least one option</p>
+      </div>
+
+      <!-- Total investment value — slider -->
+      <div class="field-group">
+        <label class="field-label">Total value of your current investments <span class="req">*</span></label>
+        <div class="slider-wrap">
+          <p class="slider-val" id="slider-display">₹5 – 25 Lakhs</p>
+          <input type="range" class="range-slider" id="f-inv-amount" min="0" max="7" value="2" oninput="updateSlider(this.value)">
+          <div class="slider-labs"><span>Below ₹1L</span><span>₹5 Cr+</span></div>
+        </div>
+      </div>
+
+      <!-- How long investing -->
+      <div class="field-group">
+        <label class="field-label">How long have you been investing? <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-inv-duration">
+            <option value="">Select duration</option>
+            <option>I haven't started yet</option><option>Less than 1 year</option>
+            <option>1 – 3 years</option><option>3 – 5 years</option>
+            <option>5 – 10 years</option><option>More than 10 years</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-inv-duration">Please select investment duration</p>
+      </div>
+
+      <!-- Primary goal -->
+      <div class="field-group">
+        <label class="field-label">What is your primary investment goal? <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-inv-goal">
+            <option value="">Select your goal</option>
+            <option>Capital preservation — protect what I have</option>
+            <option>Regular income — monthly / quarterly returns</option>
+            <option>Wealth creation — long-term growth</option>
+            <option>Retirement planning</option>
+            <option>Children's education / marriage</option>
+            <option>Tax saving</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-inv-goal">Please select your investment goal</p>
+      </div>
+
+      <!-- Past loss experience -->
+      <div class="field-group">
+        <label class="field-label">Have you ever experienced a significant investment loss? <span class="req">*</span></label>
+        <div class="sel-wrap">
+          <select class="field-select" id="f-inv-loss">
+            <option value="">Select an option</option>
+            <option>No — my investments have always been safe (FDs, gold)</option>
+            <option>Yes — a small loss, I recovered quickly</option>
+            <option>Yes — a significant loss that affected me financially</option>
+            <option>Yes — but I stayed invested and recovered over time</option>
+          </select>
+        </div>
+        <p class="err-msg" id="err-inv-loss">Please select an option</p>
+      </div>
+
+      <button class="btn-primary" onclick="submitPersonalInfo()">Continue to Risk Questions →</button>
+    </div>
+    <p class="disclaimer">Your information is private and will not be shared with third parties.</p>
+  </div>
+</div>
+
+<!-- QUIZ -->
 <div class="screen" id="screen-quiz">
   <div class="card">
-    <div class="quiz-header">
-      <span class="category-tag" id="q-category"></span>
+    <div class="quiz-top">
+      <span class="cat-pill" id="q-category"></span>
       <span class="q-counter" id="q-counter"></span>
     </div>
     <div class="progress-wrap">
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     </div>
-    <div class="card-body" style="padding-top: 4px;">
+    <div class="quiz-body">
       <span class="q-icon" id="q-icon"></span>
       <p class="q-text" id="q-text"></p>
       <div class="options" id="options-list"></div>
@@ -465,336 +340,256 @@
   </div>
 </div>
 
-<!-- ══════════════ RESULT ══════════════ -->
+<!-- RESULT -->
 <div class="screen" id="screen-result">
   <div class="card">
-    <div class="result-banner">
-      <span class="profile-emoji" id="res-emoji"></span>
-      <p class="profile-label" id="res-label"></p>
-      <h2 class="profile-name" id="res-name"></h2>
-      <p class="profile-desc" id="res-desc"></p>
-      <div class="score-pill" id="res-score-pill"></div>
+    <div class="result-hero">
+      <span class="res-emoji" id="res-emoji"></span>
+      <p class="res-label" id="res-label"></p>
+      <h2 class="res-name" id="res-name"></h2>
+      <p class="res-desc" id="res-desc"></p>
+      <div class="score-badge" id="res-badge"></div>
     </div>
+    <div class="result-body">
+      <p class="sec-label">Profile Summary</p>
+      <div class="info-summary" id="info-summary"></div>
 
-    <div class="card-body" style="padding-top: 4px;">
-      <!-- Allocation -->
-      <div class="result-block">
-        <p class="section-title">Suggested Portfolio Allocation</p>
-        <div class="alloc-bar-wrap" id="alloc-bar"></div>
+      <p class="sec-label">Suggested Portfolio Allocation</p>
+      <div class="block">
+        <div class="alloc-bar" id="alloc-bar"></div>
         <div class="alloc-legend" id="alloc-legend"></div>
       </div>
 
-      <!-- Instruments -->
-      <div class="instruments-box">
-        <p class="section-title" style="margin-bottom:8px">Instruments to Consider</p>
-        <p class="instruments-text" id="res-instruments"></p>
+      <div class="instr-box">
+        <p class="sec-label" style="margin-bottom:8px">Instruments to Consider</p>
+        <p class="instr-text" id="res-instruments"></p>
       </div>
 
-      <!-- Breakdown -->
-      <div class="result-block">
-        <p class="section-title">Your Score Breakdown</p>
-        <div class="breakdown-list" id="breakdown-list"></div>
-      </div>
+      <p class="sec-label">Score by Category</p>
+      <div class="block"><div class="breakdown-list" id="breakdown-list"></div></div>
 
-      <button class="btn-primary" onclick="retake()" style="background:#F1F5F9;color:#334155;">
-        ↺ Retake Quiz
-      </button>
+      <button class="btn-primary" onclick="retake()" style="background:#F1F5F9;color:#334155;margin-bottom:4px;">↺ Retake Assessment</button>
     </div>
-
     <div class="share-bar">
-      <button class="btn-whatsapp" onclick="shareWhatsApp()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <button class="btn-wa" onclick="shareWA()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Share on WhatsApp
       </button>
       <button class="btn-ghost" onclick="retake()">Retake</button>
     </div>
-    <p class="disclaimer">This is for educational purposes only and does not constitute financial advice.</p>
+    <p class="disclaimer">For educational purposes only. Not financial advice. Please consult a registered investment advisor.</p>
   </div>
 </div>
 
+</div>
 <script>
-const questions = [
-  {
-    id: 1, category: "Financial Situation", icon: "💰",
-    question: "What is your monthly income range?",
-    options: [
-      { label: "Below ₹25,000", score: 1 },
-      { label: "₹25,000 – ₹75,000", score: 2 },
-      { label: "₹75,000 – ₹2,00,000", score: 3 },
-      { label: "Above ₹2,00,000", score: 4 },
-    ],
-  },
-  {
-    id: 2, category: "Financial Situation", icon: "🏦",
-    question: "Do you have an emergency fund covering at least 6 months of expenses?",
-    options: [
-      { label: "No savings buffer at all", score: 1 },
-      { label: "Less than 3 months covered", score: 2 },
-      { label: "3–6 months covered", score: 3 },
-      { label: "More than 6 months covered", score: 4 },
-    ],
-  },
-  {
-    id: 3, category: "Time Horizon", icon: "⏳",
-    question: "When do you expect to need this invested money?",
-    options: [
-      { label: "Within 1 year", score: 1 },
-      { label: "1 to 3 years", score: 2 },
-      { label: "3 to 7 years", score: 3 },
-      { label: "More than 7 years", score: 4 },
-    ],
-  },
-  {
-    id: 4, category: "Loss Tolerance", icon: "📉",
-    question: "₹1,00,000 invested drops to ₹80,000 in 6 months. What do you do?",
-    options: [
-      { label: "Sell everything immediately", score: 1 },
-      { label: "Sell some to reduce exposure", score: 2 },
-      { label: "Hold and wait for recovery", score: 3 },
-      { label: "Buy more — great opportunity!", score: 4 },
-    ],
-  },
-  {
-    id: 5, category: "Loss Tolerance", icon: "⚖️",
-    question: "What maximum portfolio loss in a year is acceptable to you?",
-    options: [
-      { label: "I cannot accept any loss", score: 1 },
-      { label: "Up to 10% loss", score: 2 },
-      { label: "Up to 25% loss", score: 3 },
-      { label: "Even 50%+ for long-term gains", score: 4 },
-    ],
-  },
-  {
-    id: 6, category: "Investment Goals", icon: "🎯",
-    question: "What is your primary investment goal?",
-    options: [
-      { label: "Preserve my capital — safety first", score: 1 },
-      { label: "Steady growth with low risk", score: 2 },
-      { label: "Balanced growth and income", score: 3 },
-      { label: "Maximum growth — I'll take the risk", score: 4 },
-    ],
-  },
-  {
-    id: 7, category: "Past Behaviour", icon: "🔍",
-    question: "Have you invested in any of these before?",
-    options: [
-      { label: "Only FDs, RDs or savings accounts", score: 1 },
-      { label: "Mutual funds or gold", score: 2 },
-      { label: "Stocks or ETFs occasionally", score: 3 },
-      { label: "Stocks, F&O, crypto actively", score: 4 },
-    ],
-  },
-  {
-    id: 8, category: "Past Behaviour", icon: "😰",
-    question: "How did you react during the COVID-19 market crash in 2020?",
-    options: [
-      { label: "Didn't invest — too scared", score: 1 },
-      { label: "Paused or stopped my investments", score: 2 },
-      { label: "Stayed put, didn't change anything", score: 3 },
-      { label: "Invested MORE during the crash", score: 4 },
-    ],
-  },
-];
-
-const profiles = [
-  {
-    name: "Conservative", range: [8, 14], emoji: "🛡️",
-    color: "#1D4ED8", lightBg: "#EFF6FF", lightText: "#1D4ED8",
-    description: "You prioritise safety above everything. Capital preservation is your primary goal.",
-    allocation: [
-      { label: "Debt / Bonds", pct: 70, color: "#1D4ED8" },
-      { label: "Large-cap Equity", pct: 20, color: "#60A5FA" },
-      { label: "Gold / Liquid", pct: 10, color: "#BAE6FD" },
-    ],
-    instruments: "Fixed Deposits, Debt Mutual Funds, Government Bonds, Large-cap Index Funds",
-  },
-  {
-    name: "Moderately Conservative", range: [15, 19], emoji: "⚓",
-    color: "#0891B2", lightBg: "#ECFEFF", lightText: "#0E7490",
-    description: "You want modest growth but sleep peacefully at night. Low volatility matters to you.",
-    allocation: [
-      { label: "Debt / Bonds", pct: 50, color: "#0891B2" },
-      { label: "Large-cap Equity", pct: 35, color: "#22D3EE" },
-      { label: "Gold / Liquid", pct: 15, color: "#A5F3FC" },
-    ],
-    instruments: "Hybrid Mutual Funds, Balanced Advantage Funds, Large-cap Stocks, Gold ETFs",
-  },
-  {
-    name: "Moderate", range: [20, 24], emoji: "⚡",
-    color: "#059669", lightBg: "#ECFDF5", lightText: "#047857",
-    description: "You seek a healthy balance between growth and stability — the most common investor type.",
-    allocation: [
-      { label: "Equity (Diversified)", pct: 55, color: "#059669" },
-      { label: "Debt / Bonds", pct: 30, color: "#34D399" },
-      { label: "Gold / Liquid", pct: 15, color: "#A7F3D0" },
-    ],
-    instruments: "Flexi-cap Mutual Funds, Multi-cap Index, Bluechip Stocks, Sovereign Gold Bonds",
-  },
-  {
-    name: "Moderately Aggressive", range: [25, 28], emoji: "🚀",
-    color: "#D97706", lightBg: "#FFFBEB", lightText: "#B45309",
-    description: "Growth is your priority. You can handle market swings in exchange for better long-term returns.",
-    allocation: [
-      { label: "Equity (Growth)", pct: 70, color: "#D97706" },
-      { label: "Debt / Bonds", pct: 20, color: "#FBBF24" },
-      { label: "Gold / Liquid", pct: 10, color: "#FDE68A" },
-    ],
-    instruments: "Mid-cap Funds, Small-cap Allocation, Sectoral Themes, Direct Stocks",
-  },
-  {
-    name: "Aggressive", range: [29, 32], emoji: "🔥",
-    color: "#DC2626", lightBg: "#FEF2F2", lightText: "#B91C1C",
-    description: "Maximum growth seeker. High risk, high reward — volatility doesn't scare you one bit.",
-    allocation: [
-      { label: "High-Growth Equity", pct: 85, color: "#DC2626" },
-      { label: "Alternative Assets", pct: 10, color: "#F87171" },
-      { label: "Liquid Buffer", pct: 5, color: "#FECACA" },
-    ],
-    instruments: "Small-cap Stocks, Thematic Funds, Direct Equity, F&O (with caution), REITs",
-  },
-];
-
-const categories = ["Financial Situation", "Time Horizon", "Loss Tolerance", "Investment Goals", "Past Behaviour"];
-
-let current = 0;
-let answers = {};
-let userName = "";
-
-function getProfile(score) {
-  return profiles.find(p => score >= p.range[0] && score <= p.range[1]) || profiles[2];
+// SLIDER
+const sliderLabels = ["Below ₹1 Lakh","₹1 – 5 Lakhs","₹5 – 25 Lakhs","₹25 – 50 Lakhs","₹50L – 1 Crore","₹1 – 2 Crore","₹2 – 5 Crore","₹5 Crore+"];
+function updateSlider(v) {
+  const pct = (v/7)*100;
+  document.getElementById('f-inv-amount').style.background = `linear-gradient(90deg,var(--gold) ${pct}%,var(--border) ${pct}%)`;
+  document.getElementById('slider-display').textContent = sliderLabels[v];
 }
+updateSlider(2);
 
+// CHECKBOX
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const cb = el.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  if (cb.value === 'None yet' && cb.checked) {
+    document.querySelectorAll('#inv-grid .cb-item').forEach(item => {
+      if (item.querySelector('input').value !== 'None yet') { item.classList.remove('checked'); item.querySelector('input').checked = false; }
+    });
+  } else if (cb.checked) {
+    document.querySelectorAll('#inv-grid .cb-item').forEach(item => {
+      if (item.querySelector('input').value === 'None yet') { item.classList.remove('checked'); item.querySelector('input').checked = false; }
+    });
+  }
+}
+function getChecked() { return [...document.querySelectorAll('#inv-grid input:checked')].map(i=>i.value); }
+
+// SCREENS
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
-function startQuiz() {
-  userName = document.getElementById('user-name').value.trim();
-  current = 0;
-  answers = {};
+let personalInfo = {};
+
+// VALIDATION
+function validatePersonalInfo() {
+  let valid = true;
+  [
+    {id:'f-name', err:'err-name', test:v=>v.trim().length>=2},
+    {id:'f-age', err:'err-age', test:v=>v!==''},
+    {id:'f-occupation', err:'err-occupation', test:v=>v!==''},
+    {id:'f-marital', err:'err-marital', test:v=>v!==''},
+    {id:'f-dependents', err:'err-dependents', test:v=>v!==''},
+    {id:'f-inv-duration', err:'err-inv-duration', test:v=>v!==''},
+    {id:'f-inv-goal', err:'err-inv-goal', test:v=>v!==''},
+    {id:'f-inv-loss', err:'err-inv-loss', test:v=>v!==''},
+  ].forEach(({id,err,test}) => {
+    const el=document.getElementById(id), errEl=document.getElementById(err);
+    if (!test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); valid=false; }
+    else { el.classList.remove('error'); errEl.classList.remove('show'); }
+  });
+  const inv = getChecked();
+  const invErr = document.getElementById('err-inv-grid');
+  if (inv.length===0) { invErr.classList.add('show'); valid=false; } else { invErr.classList.remove('show'); }
+  const mob = document.getElementById('f-mobile').value.trim();
+  const mobErr = document.getElementById('err-mobile');
+  if (mob && !/^\d{10}$/.test(mob.replace(/\s/g,''))) { document.getElementById('f-mobile').classList.add('error'); mobErr.classList.add('show'); valid=false; }
+  else { document.getElementById('f-mobile').classList.remove('error'); mobErr.classList.remove('show'); }
+  return valid;
+}
+
+function submitPersonalInfo() {
+  if (!validatePersonalInfo()) { document.querySelector('.err-msg.show')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  personalInfo = {
+    name: document.getElementById('f-name').value.trim(),
+    age: document.getElementById('f-age').value,
+    occupation: document.getElementById('f-occupation').value,
+    marital: document.getElementById('f-marital').value,
+    dependents: document.getElementById('f-dependents').value,
+    mobile: document.getElementById('f-mobile').value.trim() || '—',
+    investments: getChecked().join(', '),
+    invAmount: sliderLabels[document.getElementById('f-inv-amount').value],
+    invDuration: document.getElementById('f-inv-duration').value,
+    invGoal: document.getElementById('f-inv-goal').value,
+    invLoss: document.getElementById('f-inv-loss').value,
+  };
+  current=0; answers={};
   renderQuestion();
   showScreen('screen-quiz');
 }
 
+// QUESTIONS
+const questions = [
+  {id:1,cat:"Financial Situation",icon:"💰",q:"What percentage of your monthly income do you actively invest or save?",opts:[{l:"Less than 10%",s:1},{l:"10% – 25%",s:2},{l:"25% – 40%",s:3},{l:"More than 40%",s:4}]},
+  {id:2,cat:"Financial Situation",icon:"🏦",q:"How many active financial liabilities do you have? (home loan, car loan, EMIs)",opts:[{l:"3 or more",s:1},{l:"2",s:2},{l:"1",s:3},{l:"None",s:4}]},
+  {id:3,cat:"Financial Situation",icon:"🛡️",q:"If you lost your primary income tomorrow, how long could you sustain your lifestyle?",opts:[{l:"Less than 3 months",s:1},{l:"3 to 6 months",s:2},{l:"6 months to 1 year",s:3},{l:"More than 1 year",s:4}]},
+  {id:4,cat:"Financial Situation",icon:"📊",q:"What is your household's approximate annual income from all sources?",opts:[{l:"Below ₹5 lakhs",s:1},{l:"₹5 – ₹15 lakhs",s:2},{l:"₹15 – ₹40 lakhs",s:3},{l:"Above ₹40 lakhs",s:4}]},
+  {id:5,cat:"Financial Situation",icon:"📅",q:"Do you have major financial commitments coming up in the next 3 years?",opts:[{l:"Yes, multiple large commitments",s:1},{l:"Yes, one significant commitment",s:2},{l:"Minor commitments only",s:3},{l:"No major commitments",s:4}]},
+  {id:6,cat:"Time Horizon",icon:"🎯",q:"What is the primary purpose of this new investment?",opts:[{l:"Short-term need within 2 years",s:1},{l:"Medium-term goal in 3–5 years",s:2},{l:"Long-term goal in 5–10 years",s:3},{l:"Retirement corpus — 10+ years away",s:4}]},
+  {id:7,cat:"Time Horizon",icon:"🏁",q:"At what age do you plan to retire or stop active income?",opts:[{l:"Already retired or within 2 years",s:1},{l:"In 3 to 7 years",s:2},{l:"In 7 to 15 years",s:3},{l:"More than 15 years away",s:4}]},
+  {id:8,cat:"Time Horizon",icon:"🚨",q:"How soon would you need to withdraw from this investment in an emergency?",opts:[{l:"Immediately — it's my only safety net",s:1},{l:"Within 6 months",s:2},{l:"I have other funds; can wait 1–2 years",s:3},{l:"This money is fully locked for the long term",s:4}]},
+  {id:9,cat:"Time Horizon",icon:"🌅",q:"How do you view your current life stage?",opts:[{l:"Nearing retirement — capital protection is priority",s:1},{l:"Mid-career — balancing growth and security",s:2},{l:"Peak earning years — building wealth aggressively",s:3},{l:"Post-retirement — need regular income",s:4}]},
+  {id:10,cat:"Time Horizon",icon:"🔒",q:"If a good investment required locking your money for 5 years, would you consider it?",opts:[{l:"No — I need flexibility at all times",s:1},{l:"Maybe — only for a small portion",s:2},{l:"Yes — if returns justify it",s:3},{l:"Absolutely — long lock-ins don't concern me",s:4}]},
+  {id:11,cat:"Loss Tolerance",icon:"📉",q:"Your equity portfolio drops 30% in 3 months due to a market correction. What do you do?",opts:[{l:"Sell everything and move to FDs immediately",s:1},{l:"Sell a portion to limit further loss",s:2},{l:"Hold — markets always recover eventually",s:3},{l:"Invest more — corrections are buying opportunities",s:4}]},
+  {id:12,cat:"Loss Tolerance",icon:"😰",q:"You invested ₹10 lakhs and it fell to ₹7 lakhs in 8 months. How do you feel?",opts:[{l:"Deeply anxious — I regret investing",s:1},{l:"Worried but willing to give it more time",s:2},{l:"Uncomfortable but trust the long-term process",s:3},{l:"Calm — this is normal market behaviour",s:4}]},
+  {id:13,cat:"Loss Tolerance",icon:"⚖️",q:"What is the maximum loss you can absorb emotionally and financially in a single year?",opts:[{l:"Any loss is unacceptable",s:1},{l:"Up to 10%",s:2},{l:"Up to 20–25%",s:3},{l:"More than 30% is acceptable for long-term gains",s:4}]},
+  {id:14,cat:"Loss Tolerance",icon:"📰",q:"How do you react when media reports a 'stock market crash'?",opts:[{l:"Immediately check and exit my investments",s:1},{l:"Feel anxious but wait before acting",s:2},{l:"Stay calm and review my portfolio rationally",s:3},{l:"Look for stocks to buy at a discount",s:4}]},
+  {id:15,cat:"Loss Tolerance",icon:"🏦",q:"You have ₹20 lakhs in FDs. A friend suggests moving half to equities. Your reaction?",opts:[{l:"Absolutely not — FDs are safe and that's what matters",s:1},{l:"Maybe ₹2–3 lakhs, but not more",s:2},{l:"I'd consider ₹5–8 lakhs if the strategy is sound",s:3},{l:"I'd move most of it — FD returns barely beat inflation",s:4}]},
+  {id:16,cat:"Investment Goals",icon:"🏆",q:"Which best describes your investment priority?",opts:[{l:"Protect what I have — I cannot afford to lose",s:1},{l:"Earn steady returns that beat FD rates",s:2},{l:"Grow wealth significantly over 5–10 years",s:3},{l:"Maximise returns aggressively — I understand the risk",s:4}]},
+  {id:17,cat:"Investment Goals",icon:"📈",q:"What return would make you feel your investment was successful?",opts:[{l:"Anything above FD rate (7–8%) is good enough",s:1},{l:"10–12% annually would satisfy me",s:2},{l:"15–18% is my target",s:3},{l:"I aim for 20%+ and accept higher volatility",s:4}]},
+  {id:18,cat:"Investment Goals",icon:"💸",q:"How important is regular income vs. long-term growth to you?",opts:[{l:"Regular income is essential — I depend on it",s:1},{l:"I prefer a mix of income and growth",s:2},{l:"Growth is primary; income is a bonus",s:3},{l:"Pure growth — I don't need income from investments now",s:4}]},
+  {id:19,cat:"Investment Goals",icon:"🏠",q:"How do you think about your current FD and real estate investments?",opts:[{l:"They are my core — stocks are too risky to add",s:1},{l:"They are my safety net — I can take some risk with extra funds",s:2},{l:"Part of a plan — I want more equity exposure",s:3},{l:"They are underperforming — I want to shift more to equities",s:4}]},
+  {id:20,cat:"Investment Goals",icon:"❌",q:"What would you consider a failed investment?",opts:[{l:"Any amount of capital loss",s:1},{l:"Returns lower than FD rates",s:2},{l:"Returns below 10% over 5 years",s:3},{l:"Not achieving my wealth target even if returns were positive",s:4}]},
+  {id:21,cat:"Past Behaviour",icon:"📋",q:"Have you ever invested in equities (stocks or equity mutual funds)?",opts:[{l:"Never — always stuck to FDs and real estate",s:1},{l:"Tried once but exited after a loss",s:2},{l:"Yes, occasionally through SIPs or lump sum",s:3},{l:"Yes, actively managing a stock portfolio",s:4}]},
+  {id:22,cat:"Past Behaviour",icon:"🦠",q:"During the COVID-19 crash of March 2020, what did you do with your investments?",opts:[{l:"I had no market investments at the time",s:1},{l:"I panicked and withdrew whatever I had",s:2},{l:"I held on and waited for recovery",s:3},{l:"I invested more during the crash",s:4}]},
+  {id:23,cat:"Past Behaviour",icon:"💡",q:"Have you ever taken a financial decision that felt risky but paid off?",opts:[{l:"No — I avoid all financial risk",s:1},{l:"Once or twice, but it made me uncomfortable",s:2},{l:"Yes, a few times — calculated risks work",s:3},{l:"Yes, regularly — risk is how wealth is built",s:4}]},
+  {id:24,cat:"Past Behaviour",icon:"🤝",q:"How do you typically make major financial decisions?",opts:[{l:"I consult family and avoid risk entirely",s:1},{l:"I consult an advisor and follow conservative advice",s:2},{l:"I research thoroughly and decide independently",s:3},{l:"I act on conviction quickly when I see an opportunity",s:4}]},
+  {id:25,cat:"Past Behaviour",icon:"😔",q:"Looking back, what is your biggest financial regret?",opts:[{l:"Investing in something risky and losing money",s:1},{l:"Keeping too much in FDs and missing equity growth",s:2},{l:"Not starting to invest earlier in life",s:3},{l:"Not taking bigger positions when I had conviction",s:4}]},
+  {id:26,cat:"Behavioural",icon:"👀",q:"How do you feel when a colleague makes high returns from stocks?",opts:[{l:"Relieved I didn't take that risk",s:1},{l:"Mildly envious but still prefer safety",s:2},{l:"Motivated to learn and explore equities more",s:3},{l:"I immediately research how to replicate their strategy",s:4}]},
+  {id:27,cat:"Behavioural",icon:"🌊",q:"How do you handle financial uncertainty in general?",opts:[{l:"It causes significant stress — I prefer predictability",s:1},{l:"I manage it but prefer to minimise uncertainty",s:2},{l:"I accept it as part of life and plan around it",s:3},{l:"I thrive under uncertainty — it creates opportunity",s:4}]},
+  {id:28,cat:"Behavioural",icon:"🎲",q:"Option A: guaranteed 9% return. Option B: 50% chance of 20%, 50% chance of 5%. Which?",opts:[{l:"Option A — guaranteed is always better",s:1},{l:"Option A — certainty gives me peace of mind",s:2},{l:"Option B — the expected return is higher",s:3},{l:"Option B — I'll always take the higher upside",s:4}]},
+  {id:29,cat:"Behavioural",icon:"🔍",q:"How often do you review your investments?",opts:[{l:"Rarely — I set it and forget it (mostly FDs)",s:1},{l:"Once or twice a year",s:2},{l:"Monthly — I like staying informed",s:3},{l:"Weekly or more — I actively track performance",s:4}]},
+  {id:30,cat:"Behavioural",icon:"🧭",q:"Which statement best describes your investment philosophy?",opts:[{l:"'Don't lose money' — preservation above all",s:1},{l:"'Slow and steady wins the race'",s:2},{l:"'Diversify and grow' — spread risk, aim for above-average returns",s:3},{l:"'High risk, high reward' — I invest to build significant wealth",s:4}]},
+];
+
+const profiles = [
+  {name:"Conservative",range:[30,54],emoji:"🛡️",color:"#1D4ED8",lightBg:"#EFF6FF",lightText:"#1D4ED8",
+    desc:"You prioritise safety above all else. Capital preservation is your primary goal — protecting what you've built matters more than chasing returns.",
+    alloc:[{l:"Debt / Bonds",p:70,c:"#1D4ED8"},{l:"Large-cap Equity",p:20,c:"#60A5FA"},{l:"Gold / Liquid",p:10,c:"#BAE6FD"}],
+    instr:"Fixed Deposits, Debt Mutual Funds, Government Bonds, Senior Citizen Savings Scheme, Large-cap Index Funds"},
+  {name:"Moderately Conservative",range:[55,74],emoji:"⚓",color:"#0891B2",lightBg:"#ECFEFF",lightText:"#0E7490",
+    desc:"You want modest growth but need to sleep peacefully at night. Low volatility matters — you're willing to accept slightly lower returns for stability.",
+    alloc:[{l:"Debt / Bonds",p:50,c:"#0891B2"},{l:"Large-cap Equity",p:35,c:"#22D3EE"},{l:"Gold / Liquid",p:15,c:"#A5F3FC"}],
+    instr:"Hybrid Mutual Funds, Balanced Advantage Funds, Large-cap Stocks, Gold ETFs, Corporate Bonds"},
+  {name:"Moderate",range:[75,94],emoji:"⚡",color:"#059669",lightBg:"#ECFDF5",lightText:"#047857",
+    desc:"You seek a healthy balance between growth and stability. You understand markets go up and down and you're in it for the long haul.",
+    alloc:[{l:"Equity (Diversified)",p:55,c:"#059669"},{l:"Debt / Bonds",p:30,c:"#34D399"},{l:"Gold / Liquid",p:15,c:"#A7F3D0"}],
+    instr:"Flexi-cap Mutual Funds, Multi-cap Index, Bluechip Stocks, Sovereign Gold Bonds, Balanced Advantage Funds"},
+  {name:"Moderately Aggressive",range:[95,109],emoji:"🚀",color:"#D97706",lightBg:"#FFFBEB",lightText:"#B45309",
+    desc:"Growth is your priority. You can handle significant market swings in exchange for better long-term returns. You think in years, not months.",
+    alloc:[{l:"Equity (Growth)",p:70,c:"#D97706"},{l:"Debt / Bonds",p:20,c:"#FBBF24"},{l:"Gold / Liquid",p:10,c:"#FDE68A"}],
+    instr:"Mid-cap Funds, Small-cap Allocation, Sectoral Themes, Direct Stocks, REITs"},
+  {name:"Aggressive",range:[110,120],emoji:"🔥",color:"#DC2626",lightBg:"#FEF2F2",lightText:"#B91C1C",
+    desc:"Maximum growth seeker. High risk, high reward — volatility doesn't scare you. You have the conviction and patience to ride out major corrections.",
+    alloc:[{l:"High-Growth Equity",p:85,c:"#DC2626"},{l:"Alternative Assets",p:10,c:"#F87171"},{l:"Liquid Buffer",p:5,c:"#FECACA"}],
+    instr:"Small-cap Stocks, Thematic Funds, Direct Equity, F&O (with caution), International Funds, REITs"},
+];
+
+const categories = ["Financial Situation","Time Horizon","Loss Tolerance","Investment Goals","Past Behaviour","Behavioural"];
+let current=0, answers={};
+
+function getProfile(score) { return profiles.find(p=>score>=p.range[0]&&score<=p.range[1])||profiles[2]; }
+
 function renderQuestion() {
-  const q = questions[current];
-  const total = questions.length;
-
-  document.getElementById('q-category').textContent = q.category;
-  document.getElementById('q-counter').textContent = `${current + 1} / ${total}`;
-  document.getElementById('progress-fill').style.width = `${(current / total) * 100}%`;
-  document.getElementById('q-icon').textContent = q.icon;
-  document.getElementById('q-text').textContent = q.question;
-
-  const optList = document.getElementById('options-list');
-  optList.innerHTML = '';
-  const saved = answers[q.id];
-
-  q.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn' + (saved === opt.score ? ' selected' : '');
-    btn.innerHTML = `<span class="radio-dot"><span class="radio-inner"></span></span>${opt.label}`;
-    btn.onclick = () => selectOption(opt.score);
-    optList.appendChild(btn);
+  const q=questions[current], total=questions.length;
+  document.getElementById('q-category').textContent=q.cat;
+  document.getElementById('q-counter').textContent=`${current+1} / ${total}`;
+  document.getElementById('progress-fill').style.width=`${(current/total)*100}%`;
+  document.getElementById('q-icon').textContent=q.icon;
+  document.getElementById('q-text').textContent=q.q;
+  const ol=document.getElementById('options-list'); ol.innerHTML='';
+  const saved=answers[q.id];
+  q.opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn'+(saved===opt.s?' selected':'');
+    btn.innerHTML=`<span class="radio-ring"><span class="radio-core"></span></span>${opt.l}`;
+    btn.onclick=()=>{ document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); answers[q.id]=opt.s; document.getElementById('btn-next').disabled=false; };
+    ol.appendChild(btn);
   });
-
-  document.getElementById('btn-back').style.display = current > 0 ? 'block' : 'none';
-  const nextBtn = document.getElementById('btn-next');
-  nextBtn.disabled = !saved;
-  nextBtn.textContent = current + 1 === total ? 'See My Results →' : 'Next →';
-}
-
-function selectOption(score) {
-  answers[questions[current].id] = score;
-  document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-  document.getElementById('btn-next').disabled = false;
+  document.getElementById('btn-back').style.display=current>0?'block':'none';
+  const nb=document.getElementById('btn-next'); nb.disabled=!saved; nb.textContent=current+1===total?'See My Results →':'Next →';
 }
 
 function goNext() {
-  if (!answers[questions[current].id]) return;
-  if (current + 1 < questions.length) {
-    current++;
-    renderQuestion();
-  } else {
-    showResult();
-  }
+  if(!answers[questions[current].id]) return;
+  if(current+1<questions.length){current++;renderQuestion();window.scrollTo(0,0);}
+  else showResult();
 }
+function goBack(){if(current>0){current--;renderQuestion();window.scrollTo(0,0);}}
+function retake(){current=0;answers={};personalInfo={};showScreen('screen-intro');}
 
-function goBack() {
-  if (current > 0) { current--; renderQuestion(); }
-}
-
-function retake() {
-  current = 0; answers = {};
-  showScreen('screen-intro');
-}
-
-function showResult() {
-  const score = Object.values(answers).reduce((a, b) => a + b, 0);
-  const p = getProfile(score);
-  const label = userName ? `${userName}'s Risk Profile` : 'Your Risk Profile';
-
-  document.getElementById('res-emoji').textContent = p.emoji;
-  document.getElementById('res-label').textContent = label;
-  document.getElementById('res-name').textContent = p.name;
-  document.getElementById('res-desc').textContent = p.description;
-  document.getElementById('res-instruments').textContent = p.instruments;
-
-  const pill = document.getElementById('res-score-pill');
-  pill.style.background = p.lightBg;
-  pill.style.color = p.lightText;
-  pill.style.border = `1px solid ${p.color}30`;
-  pill.textContent = `Score: ${score} / 32`;
-
-  // Allocation bar
-  const bar = document.getElementById('alloc-bar');
-  bar.innerHTML = p.allocation.map(a =>
-    `<div class="alloc-seg" style="width:${a.pct}%;background:${a.color}"></div>`
-  ).join('');
-
-  const legend = document.getElementById('alloc-legend');
-  legend.innerHTML = p.allocation.map(a => `
-    <div class="legend-row">
-      <div class="legend-left">
-        <div class="legend-dot" style="background:${a.color}"></div>
-        <span class="legend-name">${a.label}</span>
-      </div>
-      <span class="legend-pct">${a.pct}%</span>
-    </div>
-  `).join('');
-
-  // Breakdown by category
-  const breakdown = document.getElementById('breakdown-list');
-  breakdown.innerHTML = categories.map(cat => {
-    const qs = questions.filter(q => q.category === cat);
-    const total = qs.reduce((sum, q) => sum + (answers[q.id] || 0), 0);
-    const max = qs.length * 4;
-    const pct = Math.round((total / max) * 100);
-    return `
-      <div class="breakdown-item">
-        <div class="breakdown-row">
-          <span class="breakdown-cat">${cat}</span>
-          <span class="breakdown-pct">${pct}%</span>
-        </div>
-        <div class="breakdown-track">
-          <div class="breakdown-fill" style="width:${pct}%;background:${p.color}"></div>
-        </div>
-      </div>
-    `;
+function showResult(){
+  const score=Object.values(answers).reduce((a,b)=>a+b,0);
+  const p=getProfile(score);
+  document.getElementById('res-emoji').textContent=p.emoji;
+  document.getElementById('res-label').textContent=`${personalInfo.name}'s Risk Profile`;
+  document.getElementById('res-name').textContent=p.name;
+  document.getElementById('res-desc').textContent=p.desc;
+  document.getElementById('res-instruments').textContent=p.instr;
+  const badge=document.getElementById('res-badge');
+  badge.style.background=p.lightBg; badge.style.color=p.lightText; badge.style.border=`1px solid ${p.color}30`;
+  badge.textContent=`Score: ${score} / 120`;
+  document.getElementById('alloc-bar').innerHTML=p.alloc.map(a=>`<div class="alloc-seg" style="width:${a.p}%;background:${a.c}"></div>`).join('');
+  document.getElementById('alloc-legend').innerHTML=p.alloc.map(a=>`<div class="leg-row"><div class="leg-left"><div class="leg-dot" style="background:${a.c}"></div><span class="leg-name">${a.l}</span></div><span class="leg-pct">${a.p}%</span></div>`).join('');
+  document.getElementById('breakdown-list').innerHTML=categories.map(cat=>{
+    const qs=questions.filter(q=>q.cat===cat);
+    const tot=qs.reduce((s,q)=>s+(answers[q.id]||0),0);
+    const pct=Math.round((tot/(qs.length*4))*100);
+    return `<div><div class="bd-row"><span class="bd-cat">${cat}</span><span class="bd-pct">${pct}%</span></div><div class="bd-track"><div class="bd-fill" style="width:${pct}%;background:${p.color}"></div></div></div>`;
   }).join('');
-
+  const rows=[
+    ['Name',personalInfo.name],['Age',personalInfo.age],['Occupation',personalInfo.occupation],
+    ['Marital Status',personalInfo.marital],['Dependents',personalInfo.dependents],['Mobile',personalInfo.mobile],
+    ['Current Investments',personalInfo.investments],['Investment Value',personalInfo.invAmount],
+    ['Investing Since',personalInfo.invDuration],['Primary Goal',personalInfo.invGoal],
+    ['Past Loss Experience',personalInfo.invLoss],
+  ];
+  document.getElementById('info-summary').innerHTML=rows.map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
   showScreen('screen-result');
 }
 
-function shareWhatsApp() {
-  const score = Object.values(answers).reduce((a, b) => a + b, 0);
-  const p = getProfile(score);
-  const name = userName ? `${userName} is` : "I'm";
-  const text = `${p.emoji} ${name} a *${p.name}* investor!\n\nScore: ${score}/32\n\n📌 Suggested: ${p.instruments}\n\n🔗 Take the free 3-minute Investor Risk Assessment: ${window.location.href}`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+function shareWA(){
+  const score=Object.values(answers).reduce((a,b)=>a+b,0);
+  const p=getProfile(score);
+  const text=`${p.emoji} *${personalInfo.name}* completed the Investor Risk Assessment!\n\nProfile: *${p.name}*\nScore: ${score}/120\n\n📌 Suggested: ${p.instr}\n\n🔗 Take the free assessment: ${window.location.href}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
 }
 </script>
 </body>
