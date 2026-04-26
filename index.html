@@ -559,25 +559,28 @@ function goBack(){if(current>0){current--;renderQuestion();window.scrollTo(0,0);
 function retake(){current=0;answers={};personalInfo={};showScreen('screen-intro');}
 
 function submitToGoogleForm(score, profileName) {
-  // Silent background submission to Google Form
-  const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSeQRTwqeNB-IjE46MGjHfrndtzIvkBGJAzwzaRBq2AWST_F7g/formResponse';
-  const data = new FormData();
-  data.append('entry.1294995174', personalInfo.name);
-  data.append('entry.1099519033', personalInfo.age);
-  data.append('entry.2120766428', personalInfo.occupation);
-  data.append('entry.775028998',  personalInfo.marital);
-  data.append('entry.639537054',  personalInfo.dependents);
-  data.append('entry.1276287776', personalInfo.mobile);
-  data.append('entry.619382612',  personalInfo.investments);
-  data.append('entry.934547612',  personalInfo.invAmount);
-  data.append('entry.2082633012', personalInfo.invDuration);
-  data.append('entry.1972161847', personalInfo.invGoal);
-  data.append('entry.1955943258', personalInfo.invLoss);
-  data.append('entry.1862229142', score);
-  data.append('entry.1280088161', profileName);
-  // Use no-cors to silently submit — response is opaque but data is saved
-  fetch(FORM_ACTION, { method:'POST', mode:'no-cors', body:data })
-    .catch(() => {}); // Silently fail — user experience unaffected
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyewFbrFuJLvpdKdYzNynYuPOuveh8FFuxOra0VMrQ/exec';
+  const payload = {
+    name:        personalInfo.name,
+    age:         personalInfo.age,
+    occupation:  personalInfo.occupation,
+    marital:     personalInfo.marital,
+    dependents:  personalInfo.dependents,
+    mobile:      personalInfo.mobile,
+    investments: personalInfo.investments,
+    invAmount:   personalInfo.invAmount,
+    invDuration: personalInfo.invDuration,
+    invGoal:     personalInfo.invGoal,
+    invLoss:     personalInfo.invLoss,
+    score:       score,
+    profile:     profileName
+  };
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
 }
 
 function showResult(){
