@@ -559,7 +559,7 @@ function goBack(){if(current>0){current--;renderQuestion();window.scrollTo(0,0);
 function retake(){current=0;answers={};personalInfo={};showScreen('screen-intro');}
 
 function submitToGoogleForm(score, profileName) {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVWyZF6NLgJvTY_uMnYC0hovhEHSRKCwuDHgIwRvGm1Me31Da0ONKbOEzO7bmn2sqg/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXtkvxdy5bFUDexRELKjj4qgt1k1u3E18ufhoykybA289UQXZhg5Pe_84TAaoQO1p8/exec';
   // Build answer map: question id -> selected answer label
   const answerLabels = {};
   questions.forEach(q => {
