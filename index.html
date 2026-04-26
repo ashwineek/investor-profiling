@@ -243,14 +243,14 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); min-height:100vh; 
           <span style="font-size:10px;color:#9CA3AF;font-weight:400;text-transform:none;letter-spacing:0;margin-left:2px">(select all)</span>
         </label>
         <div class="cb-grid" id="inv-grid">
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="FD / RD"><span class="cb-box">✓</span><span class="cb-label">FD / RD</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Real Estate"><span class="cb-box">✓</span><span class="cb-label">Real Estate</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Gold / Jewellery"><span class="cb-box">✓</span><span class="cb-label">Gold / Jewellery</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Mutual Funds"><span class="cb-box">✓</span><span class="cb-label">Mutual Funds</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Stocks / Equity"><span class="cb-box">✓</span><span class="cb-label">Stocks / Equity</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="PPF / EPF"><span class="cb-box">✓</span><span class="cb-label">PPF / EPF</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="Insurance / LIC"><span class="cb-box">✓</span><span class="cb-label">Insurance / LIC</span></label>
-          <label class="cb-item" onclick="toggleCheck(this)"><input type="checkbox" value="None yet"><span class="cb-box">✓</span><span class="cb-label">None yet</span></label>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="FD / RD"><span class="cb-box">✓</span><span class="cb-label">FD / RD</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="Real Estate"><span class="cb-box">✓</span><span class="cb-label">Real Estate</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="Gold / Jewellery"><span class="cb-box">✓</span><span class="cb-label">Gold / Jewellery</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="Mutual Funds"><span class="cb-box">✓</span><span class="cb-label">Mutual Funds</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="Stocks / Equity"><span class="cb-box">✓</span><span class="cb-label">Stocks / Equity</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="PPF / EPF"><span class="cb-box">✓</span><span class="cb-label">PPF / EPF</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="Insurance / LIC"><span class="cb-box">✓</span><span class="cb-label">Insurance / LIC</span></div>
+          <div class="cb-item" onclick="toggleCheck(this)" data-value="None yet"><span class="cb-box">✓</span><span class="cb-label">None yet</span></div>
         </div>
         <p class="err-msg" id="err-inv-grid">Please select at least one option</p>
       </div>
@@ -392,22 +392,25 @@ function updateSlider(v) {
 }
 updateSlider(2);
 
-// CHECKBOX
+// CHECKBOX — uses div + data-value, no native input needed
 function toggleCheck(el) {
-  el.classList.toggle('checked');
-  const cb = el.querySelector('input[type="checkbox"]');
-  cb.checked = !cb.checked;
-  if (cb.value === 'None yet' && cb.checked) {
+  const val = el.getAttribute('data-value');
+  const isChecked = el.classList.contains('checked');
+  if (val === 'None yet') {
+    // Deselect all others, then toggle None yet
+    document.querySelectorAll('#inv-grid .cb-item').forEach(item => item.classList.remove('checked'));
+    if (!isChecked) el.classList.add('checked');
+  } else {
+    // Deselect "None yet" if present
     document.querySelectorAll('#inv-grid .cb-item').forEach(item => {
-      if (item.querySelector('input').value !== 'None yet') { item.classList.remove('checked'); item.querySelector('input').checked = false; }
+      if (item.getAttribute('data-value') === 'None yet') item.classList.remove('checked');
     });
-  } else if (cb.checked) {
-    document.querySelectorAll('#inv-grid .cb-item').forEach(item => {
-      if (item.querySelector('input').value === 'None yet') { item.classList.remove('checked'); item.querySelector('input').checked = false; }
-    });
+    el.classList.toggle('checked');
   }
 }
-function getChecked() { return [...document.querySelectorAll('#inv-grid input:checked')].map(i=>i.value); }
+function getChecked() {
+  return [...document.querySelectorAll('#inv-grid .cb-item.checked')].map(i => i.getAttribute('data-value'));
+}
 
 // SCREENS
 function showScreen(id) {
