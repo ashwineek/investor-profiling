@@ -559,7 +559,7 @@ function goBack(){if(current>0){current--;renderQuestion();window.scrollTo(0,0);
 function retake(){current=0;answers={};personalInfo={};showScreen('screen-intro');}
 
 function submitToGoogleForm(score, profileName) {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHmiiKvpV7ccmMrKX8V71Xddl3BWKoZxS56cf7-yAWzayLm5A4lbKFlDeZXQPEetIx/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBQL-0xGXJ_eytGMjRNP4Ikcgxn9-DIeI3PfzcYhX1MwM8YVL-VZwJANgTb1PJ2c38/exec';
   const payload = {
     name:        personalInfo.name,
     age:         personalInfo.age,
