@@ -173,7 +173,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); min-height:100vh; 
       <div class="section-divider"><div class="sdl"></div><span class="sdlabel">👤 Personal Details</span><div class="sdl"></div></div>
 
       <div class="field-group">
-        <label class="field-label">Full Name <span class="req">*</span></label>
+        <label class="field-label">Full Name <span class="opt-tag">(optional)</span></label>
         <input type="text" class="field-input" id="f-name" placeholder="e.g. Rajesh Kumar" maxlength="60">
         <p class="err-msg" id="err-name">Please enter your full name</p>
       </div>
@@ -425,7 +425,6 @@ let personalInfo = {};
 function validatePersonalInfo() {
   let valid = true;
   [
-    {id:'f-name', err:'err-name', test:v=>v.trim().length>=2},
     {id:'f-age', err:'err-age', test:v=>v!==''},
     {id:'f-occupation', err:'err-occupation', test:v=>v!==''},
     {id:'f-marital', err:'err-marital', test:v=>v!==''},
@@ -451,7 +450,7 @@ function validatePersonalInfo() {
 function submitPersonalInfo() {
   if (!validatePersonalInfo()) { document.querySelector('.err-msg.show')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
   personalInfo = {
-    name: document.getElementById('f-name').value.trim(),
+    name: document.getElementById('f-name').value.trim() || 'Anonymous',
     age: document.getElementById('f-age').value,
     occupation: document.getElementById('f-occupation').value,
     marital: document.getElementById('f-marital').value,
