@@ -265,14 +265,14 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); min-height:100vh; 
           <span style="font-size:10px;color:#9CA3AF;font-weight:400;text-transform:none;letter-spacing:0;margin-left:2px">(select all)</span>
         </label>
         <div class="cb-grid" id="inv-grid">
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="FD / RD"><span class="cb-box">✓</span><span class="cb-label">FD / RD</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="Real Estate"><span class="cb-box">✓</span><span class="cb-label">Real Estate</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="Gold / Jewellery"><span class="cb-box">✓</span><span class="cb-label">Gold / Jewellery</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="Mutual Funds"><span class="cb-box">✓</span><span class="cb-label">Mutual Funds</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="Stocks / Equity"><span class="cb-box">✓</span><span class="cb-label">Stocks / Equity</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="PPF / EPF"><span class="cb-box">✓</span><span class="cb-label">PPF / EPF</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="Insurance / LIC"><span class="cb-box">✓</span><span class="cb-label">Insurance / LIC</span></div>
-          <div class="cb-item" onclick="toggleCheck(this)" data-value="None yet"><span class="cb-box">✓</span><span class="cb-label">None yet</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="FD / RD"><span class="cb-box">✓</span><span class="cb-label">FD / RD</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="Real Estate"><span class="cb-box">✓</span><span class="cb-label">Real Estate</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="Gold / Jewellery"><span class="cb-box">✓</span><span class="cb-label">Gold / Jewellery</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="Mutual Funds"><span class="cb-box">✓</span><span class="cb-label">Mutual Funds</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="Stocks / Equity"><span class="cb-box">✓</span><span class="cb-label">Stocks / Equity</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="PPF / EPF"><span class="cb-box">✓</span><span class="cb-label">PPF / EPF</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="Insurance / LIC"><span class="cb-box">✓</span><span class="cb-label">Insurance / LIC</span></div>
+          <div class="cb-item" onclick="toggleCheck(event.target)" data-value="None yet"><span class="cb-box">✓</span><span class="cb-label">None yet</span></div>
         </div>
         <p class="err-msg" id="err-inv-grid">Please select at least one option</p>
       </div>
@@ -416,18 +416,19 @@ updateSlider(2);
 
 // CHECKBOX — uses div + data-value, no native input needed
 function toggleCheck(el) {
-  const val = el.getAttribute('data-value');
-  const isChecked = el.classList.contains('checked');
+  // Always get the parent cb-item even if child element was clicked
+  const item = el.closest('.cb-item');
+  if (!item) return;
+  const val = item.getAttribute('data-value');
+  const isChecked = item.classList.contains('checked');
   if (val === 'None yet') {
-    // Deselect all others, then toggle None yet
-    document.querySelectorAll('#inv-grid .cb-item').forEach(item => item.classList.remove('checked'));
-    if (!isChecked) el.classList.add('checked');
+    document.querySelectorAll('#inv-grid .cb-item').forEach(i => i.classList.remove('checked'));
+    if (!isChecked) item.classList.add('checked');
   } else {
-    // Deselect "None yet" if present
-    document.querySelectorAll('#inv-grid .cb-item').forEach(item => {
-      if (item.getAttribute('data-value') === 'None yet') item.classList.remove('checked');
+    document.querySelectorAll('#inv-grid .cb-item').forEach(i => {
+      if (i.getAttribute('data-value') === 'None yet') i.classList.remove('checked');
     });
-    el.classList.toggle('checked');
+    item.classList.toggle('checked');
   }
 }
 function getChecked() {
@@ -494,7 +495,7 @@ const questions = [
   {id:1,cat:"Financial Situation",icon:"💰",q:"What percentage of your monthly income do you actively invest or save?",opts:[{l:"Less than 10%",s:1},{l:"10% – 25%",s:2},{l:"25% – 40%",s:3},{l:"More than 40%",s:4}]},
   {id:2,cat:"Financial Situation",icon:"🏦",q:"How many active financial liabilities do you have? (home loan, car loan, EMIs)",opts:[{l:"3 or more",s:1},{l:"2",s:2},{l:"1",s:3},{l:"None",s:4}]},
   {id:3,cat:"Financial Situation",icon:"🛡️",q:"If you lost your primary income tomorrow, how long could you sustain your lifestyle?",opts:[{l:"Less than 3 months",s:1},{l:"3 to 6 months",s:2},{l:"6 months to 1 year",s:3},{l:"More than 1 year",s:4}]},
-  {id:4,cat:"Financial Situation",icon:"📊",q:"What is your household's approximate annual income from all sources?",opts:[{l:"Below ₹5 lakhs",s:1},{l:"₹5 – ₹15 lakhs",s:2},{l:"₹15 – ₹40 lakhs",s:3},{l:"Above ₹40 lakhs",s:4}]},
+  {id:4,cat:"Financial Situation",icon:"📊",q:"What is your household's approximate annual income from all sources? (optional)",opts:[{l:"Below ₹5 lakhs",s:1},{l:"₹5 – ₹15 lakhs",s:2},{l:"₹15 – ₹40 lakhs",s:3},{l:"Above ₹40 lakhs",s:4},{l:"Prefer not to say",s:2}]},
   {id:5,cat:"Financial Situation",icon:"📅",q:"Do you have major financial commitments coming up in the next 3 years?",opts:[{l:"Yes, multiple large commitments",s:1},{l:"Yes, one significant commitment",s:2},{l:"Minor commitments only",s:3},{l:"No major commitments",s:4}]},
   {id:6,cat:"Time Horizon",icon:"🎯",q:"What is the primary purpose of this new investment?",opts:[{l:"Short-term need within 2 years",s:1},{l:"Medium-term goal in 3–5 years",s:2},{l:"Long-term goal in 5–10 years",s:3},{l:"Retirement corpus — 10+ years away",s:4}]},
   {id:7,cat:"Time Horizon",icon:"🏁",q:"At what age do you plan to retire or stop active income?",opts:[{l:"Already retired or within 2 years",s:1},{l:"In 3 to 7 years",s:2},{l:"In 7 to 15 years",s:3},{l:"More than 15 years away",s:4}]},
@@ -568,11 +569,16 @@ function renderQuestion() {
     ol.appendChild(btn);
   });
   document.getElementById('btn-back').style.display=current>0?'block':'none';
-  const nb=document.getElementById('btn-next'); nb.disabled=!saved; nb.textContent=current+1===total?'See My Results →':'Next →';
+  const nb=document.getElementById('btn-next');
+  const isOptional = q.q.includes('(optional)');
+  nb.disabled = !saved && !isOptional;
+  nb.textContent = current+1===total ? 'See My Results →' : isOptional && !saved ? 'Skip →' : 'Next →';
 }
 
 function goNext() {
-  if(!answers[questions[current].id]) return;
+  const q = questions[current];
+  const isOptional = q.q.includes('(optional)');
+  if(!answers[q.id] && !isOptional) return;
   if(current+1<questions.length){current++;renderQuestion();window.scrollTo(0,0);}
   else showResult();
 }
